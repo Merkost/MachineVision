@@ -128,3 +128,55 @@ fun XYTimeDialog(
         }
     )
 }
+
+@Composable
+fun ChessDialog(
+    onDone: (cellsInRow: Int, cellSize: Int) -> Unit,
+    onDismiss: () -> Unit,
+) {
+    var cellsInRow by remember {
+        mutableStateOf("")
+    }
+    var cellSize by remember {
+        mutableStateOf("")
+    }
+
+    Dialog(
+        onDismissRequest = onDismiss,
+        content = {
+            Card(shape = RoundedCornerShape(12.dp)) {
+                Column(
+                    modifier = Modifier.padding(16.dp),
+                    verticalArrangement = Arrangement.spacedBy(16.dp)
+                ) {
+                    Text("Введите количество клеток в одном ряду и размер (сторона) клетки в пикселах")
+                    Column(
+                        verticalArrangement = Arrangement.spacedBy(4.dp)
+                    ) {
+                        OutlinedTextField(
+                            modifier = Modifier.fillMaxWidth(),
+                            value = cellsInRow,
+                            onValueChange = { cellsInRow = it },
+                            placeholder = { Text("Клеток в ряду") })
+                        OutlinedTextField(
+                            modifier = Modifier.fillMaxWidth(),
+                            value = cellSize,
+                            onValueChange = { cellSize = it },
+                            placeholder = { Text("Размер клетки") })
+                        Row {
+                            Button(
+                                onClick = {
+                                    onDone(cellsInRow.toInt(), cellSize.toInt())
+                                    onDismiss()
+                                },
+                                enabled = cellsInRow.toIntOrNull() != null && cellSize.toIntOrNull() != null
+                            ) {
+                                Text("Подтвердить")
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    )
+}
